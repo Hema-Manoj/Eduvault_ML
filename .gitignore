@@ -1,0 +1,24 @@
+# Virtual Environments
+venv/
+venv311/
+
+# Python cache
+__pycache__/
+*.pyc
+
+# Generated OCR / image outputs
+utils/output_images/
+*.png
+*.jpg
+*.jpeg
+*.pdf
+
+# VS Code
+.vscode/
+
+# OS files
+.DS_Store
+Thumbs.db
+
+# Logs
+*.log
