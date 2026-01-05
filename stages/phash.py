@@ -14,7 +14,8 @@ KNOWN_ISSUERS = {
     "microsoft": ["microsoft", "azure"],
     "nptel": ["nptel", "iit"],
     "udemy": ["udemy"],
-    "unstop": ["unstop"]
+    "unstop": ["unstop"],
+    "eduskills": ["eduskills", "edu skills"],
 }
 
 HAMMING_THRESHOLD = 10
