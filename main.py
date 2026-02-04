@@ -4,12 +4,21 @@ import os
 from utils.image_loader import process_drive_pdf
 from stages.ocr import extract_text
 from stages.phash import process_phash_for_image
+from stages.pdf_name_forensics import run_pdf_name_forensics
+from stages.cnn_infer_anomaly import run_cnn_anomaly
 
 
 def main():
     print("🚀 EduVault verification started")
 
     link = input("Enter Google Drive PDF link: ").strip()
+
+    # 🔍 STEP 0: PDF Name Forensics (non-blocking)
+    pdf_forensics = run_pdf_name_forensics(link)
+
+    print("\n🧾 PDF Name Forensics Result:")
+    for k, v in pdf_forensics.items():
+        print(f"{k}: {v}")
 
     # Step 1: Convert PDF → images
     image_paths = process_drive_pdf(link)
@@ -18,18 +27,22 @@ def main():
         print("❌ No images generated")
         return
 
-    # Step 2: Process first page (certificate)
-    image_path = os.path.abspath(image_paths[0])   # ✅ NORMALIZE PATH
+    image_path = os.path.abspath(image_paths[0])
     print(f"\n📄 Processing image: {image_path}")
 
-    # Step 3: OCR
+    # Step 2: OCR
     ocr_out = extract_text(image_path)
 
     if not ocr_out["is_text_found"]:
         print("❌ No text found in certificate")
         return
 
-    # Step 4: pHash + DB logic
+    print("\n🧠 OCR Extraction Result:")
+    print(ocr_out["raw_text"][:1000])
+    if len(ocr_out["raw_text"]) > 1000:
+        print("\n... [truncated]")
+
+    # Step 3: pHash
     phash_result = process_phash_for_image(
         image_path=image_path,
         ocr_text=ocr_out["raw_text"]
@@ -37,6 +50,13 @@ def main():
 
     print("\n🔎 pHash Verification Result:")
     for k, v in phash_result.items():
+        print(f"{k}: {v}")
+
+    # Step 4: CNN anomaly detection
+    cnn_result = run_cnn_anomaly(image_path)
+
+    print("\n🧠 CNN Anomaly Detection Result:")
+    for k, v in cnn_result.items():
         print(f"{k}: {v}")
 
     print("\n✅ Pipeline completed")
