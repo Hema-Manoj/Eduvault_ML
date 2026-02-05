@@ -13,7 +13,7 @@ from stages.cnn_anomaly import (
 
 MODEL_PATH = "data/cnn_anomaly_model.pkl"
 
-NORMAL_THRESHOLD = 0.06
+NORMAL_THRESHOLD = 0.045
 UNUSUAL_THRESHOLD = -0.05
 
 
