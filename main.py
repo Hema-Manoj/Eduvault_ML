@@ -6,6 +6,8 @@ from stages.ocr import extract_text
 from stages.phash import process_phash_for_image
 from stages.pdf_name_forensics import run_pdf_name_forensics
 from stages.cnn_infer_anomaly import run_cnn_anomaly
+from stages.aggregator import aggregate_verdict
+
 
 
 def main():
@@ -58,6 +60,18 @@ def main():
     print("\n🧠 CNN Anomaly Detection Result:")
     for k, v in cnn_result.items():
         print(f"{k}: {v}")
+
+    # ---------------- FINAL AGGREGATION ----------------
+    final_result = aggregate_verdict(
+        pdf_forensics,
+        phash_result,
+        cnn_result
+    )
+    
+    print("\n🧮 FINAL AGGREGATED VERDICT")
+    for k, v in final_result.items():
+        print(f"{k}: {v}")
+
 
     print("\n✅ Pipeline completed")
 
